@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+export const API_URL = import.meta.env.VITE_API_URL || 'https://prop-connect-two.vercel.app/api';
 export const http = axios.create({ baseURL: API_URL });
 
 const TOKEN_KEY = 'property_portal_token';
