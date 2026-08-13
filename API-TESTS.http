@@ -1,0 +1,59 @@
+@api = http://localhost:5000/api
+@token = paste-agent-jwt-here
+
+### Health
+GET {{api}}/health
+
+### Register agent
+POST {{api}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "Raj Agent",
+  "agencyName": "Raj Properties",
+  "email": "raj@example.com",
+  "mobile": "9876500000",
+  "whatsapp": "9876500000",
+  "password": "Password@123",
+  "city": "Pune"
+}
+
+### Login
+POST {{api}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "demo@saiproperties.com",
+  "password": "Demo@12345"
+}
+
+### Dashboard
+GET {{api}}/dashboard
+Authorization: Bearer {{token}}
+
+### Create property
+POST {{api}}/properties
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "2 BHK Flat for Rent in Wakad",
+  "purpose": "rent",
+  "propertyType": "flat",
+  "bhk": "2BHK",
+  "monthlyRent": 22000,
+  "deposit": 60000,
+  "status": "vacant",
+  "address": {
+    "state": "Maharashtra",
+    "city": "Pune",
+    "area": "Wakad"
+  },
+  "amenities": ["Lift", "Car Parking", "Security"]
+}
+
+### Public agent page
+GET {{api}}/public/agents/sai-properties
+
+### Public listings
+GET {{api}}/public/agents/sai-properties/properties?purpose=rent&propertyType=flat
