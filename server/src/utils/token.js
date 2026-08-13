@@ -1,11 +1,12 @@
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
+import appConfig from '../config/appConfig.js';
 
 export function signToken(user) {
   return jwt.sign(
     { sub: user._id.toString(), role: user.role },
-    process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+    appConfig.jwtSecret,
+    { expiresIn: appConfig.jwtExpiresIn }
   );
 }
 

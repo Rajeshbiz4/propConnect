@@ -2,8 +2,11 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import crypto from 'crypto';
+import os from 'os';
 
-const uploadRoot = path.resolve(process.env.UPLOAD_DIR || 'uploads');
+const uploadRoot = process.env.VERCEL
+  ? path.join(os.tmpdir(), 'propconnect-uploads')
+  : path.resolve(process.env.UPLOAD_DIR || 'uploads');
 const tempDir = path.join(uploadRoot, '.tmp');
 fs.mkdirSync(tempDir, { recursive: true });
 
@@ -15,18 +18,15 @@ const storage = multer.diskStorage({
   }
 });
 
-const allowed = new Set(['image/jpeg', 'image/png', 'image/webp']);
-
 export const upload = multer({
   storage,
   limits: {
-    fileSize: Number(process.env.MAX_UPLOAD_MB || 20) * 1024 * 1024,
+    // This is only a safety limit for the SOURCE upload. The image saved by
+    // the application is optimized separately to MAX_FINAL_IMAGE_MB (5 MB).
+    fileSize: Number(process.env.MAX_SOURCE_IMAGE_MB || 50) * 1024 * 1024,
     files: 20
-  },
-  fileFilter: (req, file, cb) => {
-    if (!allowed.has(file.mimetype)) {
-      return cb(new Error('Only JPG, PNG and WEBP images are allowed'));
-    }
-    cb(null, true);
   }
+  // No MIME-only filter here. Browser MIME values are not reliable and some
+  // phone formats can be reported differently. Sharp validates the actual
+  // file contents before the image is saved.
 });

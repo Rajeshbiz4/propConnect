@@ -6,8 +6,10 @@ export function errorHandler(err, req, res, next) {
   console.error(err);
 
   if (err.code === 'LIMIT_FILE_SIZE') {
-    const maxMb = Number(process.env.MAX_UPLOAD_MB || 20);
-    return res.status(400).json({ message: `Each image must be ${maxMb} MB or smaller` });
+    const maxMb = Number(process.env.MAX_SOURCE_IMAGE_MB || 50);
+    return res.status(400).json({
+      message: `This source image is too large to process. Please use an image smaller than ${maxMb} MB.`
+    });
   }
   if (err.code === 'LIMIT_FILE_COUNT' || err.code === 'LIMIT_UNEXPECTED_FILE') {
     return res.status(400).json({ message: 'You can upload maximum 20 property photos' });
